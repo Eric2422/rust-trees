@@ -1,18 +1,49 @@
 mod binary_search_tree;
 
-use std::env;
+use std::io::Write;
 
 use binary_search_tree::BinarySearchTree;
+use binary_search_tree::BinarySearchTreeType;
 
 fn main() {
-    let mut tree: BinarySearchTree<String> = BinarySearchTree::new();
+    // Check for valid number of arguments.
+    let args: Vec<String> = std::env::args().collect();
+    if std::env::args().len() < 2 {
+        panic!("Usage: {} <string, int>", args[0]);
+    }
 
-    for arg in env::args().skip(1) {
-        tree.insert(arg);
+    let mut tree;
+    match args[1].as_str() {
+        "string" => {
+            tree = BinarySearchTreeType::String(BinarySearchTree::new());
+        }
+        "i32" => {
+            tree = BinarySearchTreeType::Integer(BinarySearchTree::new());
+        }
+        &_ => {
+            panic!("{} is not a valid type.", args[1]);
+        }
+    }
+
+    print!("Enter element to insert: ");
+    let _ = std::io::stdout().flush();
+
+    let mut input = String::new();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("Invalid input type.");
+    println!();
+
+    match tree {
+        BinarySearchTreeType::Integer(ref mut integer_tree) => {
+            integer_tree.insert(input.parse::<i32>().expect("Non a number."))
+        }
+        BinarySearchTreeType::String(ref mut string_tree) => {
+            string_tree.insert(input);
+        }
     }
 
     let len = tree.len();
-    println!("Initial tree size: {len}");
-    let tree_string = tree.to_string();
-    println!("Tree: {tree_string}");
+    println!("Tree size: {len}");
+    print!("Tree:\n{}", tree.to_string());
 }
