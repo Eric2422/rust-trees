@@ -9,7 +9,7 @@ fn main() {
     // Check for valid number of arguments.
     let args: Vec<String> = std::env::args().collect();
     if std::env::args().len() < 2 {
-        panic!("Usage: {} <string, int>", args[0]);
+        panic!("Usage: {} <string, int/integer>", args[0]);
     }
 
     let mut tree;
@@ -17,33 +17,37 @@ fn main() {
         "string" => {
             tree = BinarySearchTreeType::String(BinarySearchTree::new());
         }
-        "i32" => {
+        "int" | "integer" => {
             tree = BinarySearchTreeType::Integer(BinarySearchTree::new());
         }
         &_ => {
-            panic!("{} is not a valid type.", args[1]);
+            panic!("\"{}\" is not a valid type.", args[1]);
         }
     }
 
-    print!("Enter element to insert: ");
-    let _ = std::io::stdout().flush();
+    loop {
+        print!("Enter element to insert: ");
+        let _ = std::io::stdout().flush();
 
-    let mut input = String::new();
-    std::io::stdin()
-        .read_line(&mut input)
-        .expect("Invalid input type.");
-    println!();
+        let mut input = String::new();
+        std::io::stdin()
+            .read_line(&mut input)
+            .expect("Invalid input type.");
+        input = input.trim_end().to_string();
+        println!();
 
-    match tree {
-        BinarySearchTreeType::Integer(ref mut integer_tree) => {
-            integer_tree.add(input.parse::<i32>().expect("Non a number."))
+        match tree {
+            BinarySearchTreeType::Integer(ref mut integer_tree) => integer_tree.add(
+                input
+                    .parse::<i32>()
+                    .expect(format!("\"{input}\" is not an integer.\n").as_str()),
+            ),
+            BinarySearchTreeType::String(ref mut string_tree) => {
+                string_tree.add(input);
+            }
         }
-        BinarySearchTreeType::String(ref mut string_tree) => {
-            string_tree.add(input);
-        }
+
+        println!("Tree size: {}", tree.size());
+        println!("Tree:\n{}", tree.to_string());
     }
-
-    let len = tree.size();
-    println!("Tree size: {len}");
-    print!("Tree:\n{}", tree.to_string());
 }

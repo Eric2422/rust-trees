@@ -38,11 +38,14 @@ impl<T: Ord + ToString> ToString for Node<T> {
 }
 
 impl<T: Ord + ToString> Node<T> {
-    /// Create a new node with no children.
+    /// Create a new [`Node`] with no children.
     ///
     /// # Arguments
     ///
-    /// * `value` - The value stored by the new `Node`.
+    /// * `value` - The value stored by the new [`Node`].
+    ///
+    /// # Return
+    /// A new [`Node`] with no children.
     pub fn new(value: T) -> Self {
         Self {
             value,
@@ -73,6 +76,26 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
+    fn has_left_child(self) -> bool {
+        match self.0 {
+            None => false,
+            Some(node) => match node.left.0 {
+                None => false,
+                Some(_node) => true,
+            },
+        }
+    }
+
+    fn has_right_child(self) -> bool {
+        match self.0 {
+            None => false,
+            Some(node) => match node.right.0 {
+                None => false,
+                Some(_node) => true,
+            },
+        }
+    }
+
     fn has(&self, value: &T) -> bool {
         match &self.0 {
             None => false,
@@ -94,13 +117,27 @@ impl<T: Ord + ToString> Subtree<T> {
     fn to_string(&self, depth: u32) -> String {
         match &self.0 {
             None => String::from(""),
-            Some(node) => format!(
-                "{}{}: {depth}\n{}{}",
-                "\t".repeat(depth as usize),
-                node.to_string(),
-                &node.left.to_string(depth + 1),
-                &node.right.to_string(depth + 1)
-            ),
+            Some(node) => {
+                let mut output_string: String = String::from("");
+                // if depth > 1 {
+                //     output_string += "|"
+                // }
+
+                if depth > 0 {
+                    output_string += "   ".repeat((depth - 1) as usize).as_str();
+                    output_string += "└─ ";
+                }
+
+                output_string += format!(
+                    "{}\n{}{}",
+                    node.to_string(),
+                    &node.left.to_string(depth + 1),
+                    &node.right.to_string(depth + 1)
+                )
+                .as_str();
+
+                return output_string;
+            }
         }
     }
 }
@@ -108,7 +145,7 @@ impl<T: Ord + ToString> Subtree<T> {
 impl<T: Ord + ToString> ToString for Subtree<T> {
     fn to_string(&self) -> String {
         match &self.0 {
-            None => String::from(""),
+            None => String::from("(empty)"),
             Some(_node) => self.to_string(0),
         }
     }
@@ -122,7 +159,7 @@ pub struct BinarySearchTree<T: Ord + ToString> {
 
 impl<T: Ord + ToString> ToString for BinarySearchTree<T> {
     fn to_string(&self) -> String {
-        self.root.to_string(0)
+        self.root.to_string( 0)
     }
 }
 
