@@ -15,10 +15,10 @@ impl ToString for BinarySearchTreeType {
 }
 
 impl BinarySearchTreeType {
-    pub fn len(&self) -> u32 {
+    pub fn size(&self) -> u32 {
         match self {
-            Self::Integer(tree) => tree.len(),
-            Self::String(tree) => tree.len(),
+            Self::Integer(tree) => tree.size(),
+            Self::String(tree) => tree.size(),
         }
     }
 }
@@ -62,13 +62,13 @@ impl<T: Ord + ToString> Subtree<T> {
         Self(None)
     }
 
-    fn insert(&mut self, value: T) {
+    fn add(&mut self, value: T) {
         match &mut self.0 {
             None => self.0 = Some(Box::new(Node::new(value))),
             Some(node) => match value.cmp(&node.value) {
-                Ordering::Less => node.left.insert(value),
+                Ordering::Less => node.left.add(value),
                 Ordering::Equal => {}
-                Ordering::Greater => node.right.insert(value),
+                Ordering::Greater => node.right.add(value),
             },
         }
     }
@@ -84,10 +84,10 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
-    fn len(&self) -> u32 {
+    fn size(&self) -> u32 {
         match &self.0 {
             None => 0,
-            Some(node) => node.left.len() + 1 + node.right.len(),
+            Some(node) => node.left.size() + 1 + node.right.size(),
         }
     }
 
@@ -133,15 +133,15 @@ impl<T: Ord + ToString> BinarySearchTree<T> {
         }
     }
 
-    pub fn insert(&mut self, value: T) {
-        self.root.insert(value);
+    pub fn add(&mut self, value: T) {
+        self.root.add(value);
     }
 
     pub fn has(&self, value: &T) -> bool {
         self.root.has(value)
     }
 
-    pub fn len(&self) -> u32 {
-        self.root.len()
+    pub fn size(&self) -> u32 {
+        self.root.size()
     }
 }

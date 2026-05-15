@@ -36,14 +36,14 @@ fn main() {
 
     match tree {
         BinarySearchTreeType::Integer(ref mut integer_tree) => {
-            integer_tree.insert(input.parse::<i32>().expect("Non a number."))
+            integer_tree.add(input.parse::<i32>().expect("Non a number."))
         }
         BinarySearchTreeType::String(ref mut string_tree) => {
-            string_tree.insert(input);
+            string_tree.add(input);
         }
     }
 
-    let len = tree.len();
+    let len = tree.size();
     println!("Tree size: {len}");
     print!("Tree:\n{}", tree.to_string());
 }
