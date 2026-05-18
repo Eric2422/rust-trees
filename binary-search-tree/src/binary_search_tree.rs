@@ -23,6 +23,7 @@ impl BinarySearchTreeType {
     }
 }
 
+
 /// A node to be used in [`BinarySearchTree`].
 #[derive(Debug)]
 struct Node<T: Ord + ToString> {
@@ -54,6 +55,7 @@ impl<T: Ord + ToString> Node<T> {
         }
     }
 }
+
 
 /// A subtree in [`BinarySearchTree`].
 #[derive(Debug)]
@@ -127,7 +129,6 @@ impl<T: Ord + ToString> Subtree<T> {
                     output_string += "   ".repeat((depth - 1) as usize).as_str();
                     if self.has_right_child() {
                         output_string += "├─ ";
-                    
                     } else {
                         output_string += "└─ ";
                     };
@@ -155,6 +156,7 @@ impl<T: Ord + ToString> ToString for Subtree<T> {
         }
     }
 }
+
 
 /// A binary search tree that does not accept duplicate values.
 #[derive(Debug)]
