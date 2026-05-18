@@ -76,20 +76,20 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
-    fn has_left_child(self) -> bool {
-        match self.0 {
+    fn has_left_child(&self) -> bool {
+        match &self.0 {
             None => false,
-            Some(node) => match node.left.0 {
+            Some(node) => match &node.left.0 {
                 None => false,
                 Some(_node) => true,
             },
         }
     }
 
-    fn has_right_child(self) -> bool {
-        match self.0 {
+    fn has_right_child(&self) -> bool {
+        match &self.0 {
             None => false,
-            Some(node) => match node.right.0 {
+            Some(node) => match &node.right.0 {
                 None => false,
                 Some(_node) => true,
             },
@@ -119,13 +119,18 @@ impl<T: Ord + ToString> Subtree<T> {
             None => String::from(""),
             Some(node) => {
                 let mut output_string: String = String::from("");
-                // if depth > 1 {
-                //     output_string += "|"
-                // }
+                if depth > 1 {
+                    output_string += ""
+                }
 
                 if depth > 0 {
                     output_string += "   ".repeat((depth - 1) as usize).as_str();
-                    output_string += "└─ ";
+                    if self.has_right_child() {
+                        output_string += "├─ ";
+                    
+                    } else {
+                        output_string += "└─ ";
+                    };
                 }
 
                 output_string += format!(
@@ -159,7 +164,7 @@ pub struct BinarySearchTree<T: Ord + ToString> {
 
 impl<T: Ord + ToString> ToString for BinarySearchTree<T> {
     fn to_string(&self) -> String {
-        self.root.to_string( 0)
+        self.root.to_string(0)
     }
 }
 
