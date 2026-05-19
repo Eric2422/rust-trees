@@ -1,11 +1,13 @@
 use std::cmp::Ordering;
 
+/// Enum to distinguish between different generic types for [`BinarySearchTree`].
 pub enum BinarySearchTreeType {
     Integer(BinarySearchTree<i32>),
     String(BinarySearchTree<String>),
 }
 
 impl ToString for BinarySearchTreeType {
+    /// Return a [`String`] that represents the elements of the tree.
     fn to_string(&self) -> String {
         match self {
             Self::Integer(tree) => tree.to_string(),
@@ -15,6 +17,11 @@ impl ToString for BinarySearchTreeType {
 }
 
 impl BinarySearchTreeType {
+    /// Return the size of the tree (i.e., how many elements are in it).
+    ///
+    /// # Return
+    ///
+    /// The size of the tree (i.e., how many elements are in it).
     pub fn size(&self) -> u32 {
         match self {
             Self::Integer(tree) => tree.size(),
@@ -23,9 +30,7 @@ impl BinarySearchTreeType {
     }
 }
 
-
 /// A node to be used in [`BinarySearchTree`].
-#[derive(Debug)]
 struct Node<T: Ord + ToString> {
     value: T,
     left: Subtree<T>,
@@ -46,6 +51,7 @@ impl<T: Ord + ToString> Node<T> {
     /// * `value` - The value stored by the new [`Node`].
     ///
     /// # Return
+    ///
     /// A new [`Node`] with no children.
     pub fn new(value: T) -> Self {
         Self {
@@ -56,17 +62,22 @@ impl<T: Ord + ToString> Node<T> {
     }
 }
 
-
 /// A subtree in [`BinarySearchTree`].
-#[derive(Debug)]
+/// Serves as a wrapper for possibly null [`Node`]s.
 struct Subtree<T: Ord + ToString>(Option<Box<Node<T>>>);
 
 impl<T: Ord + ToString> Subtree<T> {
-    /// Create an empty subtree (i.e, a null node).
+    /// Create an empty subtree (i.e, a null [`Node`]).
     pub fn new() -> Self {
         Self(None)
     }
 
+    /// Add a new [`Node`] to the [`Subtree`], following the rules of binary
+    /// search trees.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The value that the new [`Node`] should contain.
     fn add(&mut self, value: T) {
         match &mut self.0 {
             None => self.0 = Some(Box::new(Node::new(value))),
@@ -78,6 +89,11 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
+    /// Return whether this [`Subtree`] has a left child.
+    ///
+    /// # Return
+    ///
+    /// Whether this [`Subtree`] has a left child.
     fn has_left_child(&self) -> bool {
         match &self.0 {
             None => false,
@@ -88,6 +104,11 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
+    /// Return whether this [`Subtree`] has a right child.
+    ///
+    /// # Return
+    ///
+    /// Whether this [`Subtree`] has a right child.
     fn has_right_child(&self) -> bool {
         match &self.0 {
             None => false,
@@ -98,6 +119,12 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
+    /// Return whether a given value is contained within this [`Subtree`].
+    /// Recursively searches using the rules of [`BinarySearchTree`]s.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The value to search for in the tree.
     fn has(&self, value: &T) -> bool {
         match &self.0 {
             None => false,
@@ -109,6 +136,11 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
+    /// Return the size of the tree (i.e., how many elements are in it).
+    ///
+    /// # Return
+    ///
+    /// The size of the tree (i.e., how many elements are in it).
     fn size(&self) -> u32 {
         match &self.0 {
             None => 0,
@@ -116,6 +148,13 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
+    /// Recursively generate a [`String`] to represent the elements in this [`Subtree`].
+    ///
+    /// # Arguments
+    ///
+    /// # Return
+    ///
+    /// The [`String`] representing this [`Subtree`], including all descendants.
     fn to_string(&self, depth: u32) -> String {
         match &self.0 {
             None => String::from(""),
@@ -157,9 +196,8 @@ impl<T: Ord + ToString> ToString for Subtree<T> {
     }
 }
 
-
 /// A binary search tree that does not accept duplicate values.
-#[derive(Debug)]
+/// Makes no attempt to balance the tree.
 pub struct BinarySearchTree<T: Ord + ToString> {
     root: Subtree<T>,
 }
@@ -171,20 +209,38 @@ impl<T: Ord + ToString> ToString for BinarySearchTree<T> {
 }
 
 impl<T: Ord + ToString> BinarySearchTree<T> {
+    /// Create an empty [`BinarySearchTree`], one with no root [`Node`].
     pub fn new() -> Self {
         Self {
             root: Subtree::new(),
         }
     }
 
+    /// Add a new [`Node`] to the [`Subtree`], following the rules of binary
+    /// search trees.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The value that the new [`Node`] should contain.
     pub fn add(&mut self, value: T) {
         self.root.add(value);
     }
 
+    /// Return whether a given value is contained within this [`Subtree`].
+    /// Recursively searches using the rules of [`BinarySearchTree`]s.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The value to search for in the tree.
     pub fn has(&self, value: &T) -> bool {
         self.root.has(value)
     }
 
+    /// Return the size of the tree (i.e., how many elements are in it).
+    ///
+    /// # Return
+    ///
+    /// The size of the tree (i.e., how many elements are in it).
     pub fn size(&self) -> u32 {
         self.root.size()
     }
