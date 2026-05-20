@@ -6,21 +6,13 @@ use binary_search_tree::BinarySearchTree;
 use binary_search_tree::BinarySearchTreeType;
 
 fn main() {
-    // Check for valid number of arguments.
+    // 查看有没有足够引数。
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 2 {
         panic!("用法：{} <string、int/integer> <随机值数>", args[0]);
     }
 
-    // 如果有
-    let num_random = if args.len() >= 3 {
-        args[2]
-            .parse::<i32>()
-            .expect(format!("\"{}\"不是整数。\n", args[2]).as_str())
-    } else {
-        0
-    };
-
+    // 第二引数是数的类型。
     let mut tree;
     match args[1].as_str() {
         "int" | "integer" => {
@@ -36,6 +28,16 @@ fn main() {
         }
     }
 
+    // 如果有第三引数，当为添加几个随机值。
+    let num_random = if args.len() >= 3 {
+        args[2]
+            .parse::<i32>()
+            .expect(format!("\"{}\"不是整数。\n", args[2]).as_str())
+    } else {
+        0
+    };
+
+    // 将随机值添加到树。
     match tree {
         BinarySearchTreeType::Integer(ref mut integer_tree) => {
             for _i in 0..num_random {
@@ -50,6 +52,7 @@ fn main() {
         }
     }
 
+    // 反复请用户输入新的值。
     loop {
         println!("树大小：{}", tree.size());
         println!("树：\n{}", tree.to_string());
