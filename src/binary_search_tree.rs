@@ -1,6 +1,7 @@
 use std::cmp::Ordering;
 
-/// Enum to distinguish between different generic types for [`BinarySearchTree`].
+/// Enum to distinguish between different generic types for
+/// [`BinarySearchTree`].
 pub enum BinarySearchTreeType {
     Integer(BinarySearchTree<i32>),
     String(BinarySearchTree<String>),
@@ -68,24 +69,83 @@ struct Subtree<T: Ord + ToString>(Option<Box<Node<T>>>);
 
 impl<T: Ord + ToString> Subtree<T> {
     /// Create an empty subtree (i.e, a null [`Node`]).
-    pub fn new() -> Self {
+    fn new() -> Self {
         Self(None)
     }
 
+    /// 获取最小值。
+    ///
+    /// # 返回
+    ///
+    /// 最小值。
+    fn get_min(self) -> T {
+        match self.0 {
+            None => self.0.unwrap().value,
+            Some(node) => node.left.get_min(),
+        }
+    }
+
+    /// 获取最大值。
+    ///
+    /// # 返回
+    ///
+    /// 最大值。
+    fn get_max(self) -> T {
+        match self.0 {
+            None => self.0.unwrap().value,
+            Some(node) => node.right.get_max(),
+        }
+    }
+
     /// Add a new [`Node`] to the [`Subtree`], following the rules of binary
-    /// search trees.
+    /// search trees. Duplicate values are ignored.
     ///
     /// # Arguments
     ///
     /// * `value` - The value that the new [`Node`] should contain.
-    fn add(&mut self, value: T) {
+    ///
+    /// # Return
+    ///
+    /// Whether a new node was added or not. Adding a new node fails when the
+    /// value is duplicate. Otherwise, it succeeds.
+    fn add(&mut self, value: T) -> bool {
         match &mut self.0 {
-            None => self.0 = Some(Box::new(Node::new(value))),
+            None => {
+                self.0 = Some(Box::new(Node::new(value)));
+                true
+            }
             Some(node) => match value.cmp(&node.value) {
-                Ordering::Less => node.left.add(value),
-                Ordering::Equal => {}
-                Ordering::Greater => node.right.add(value),
+                Ordering::Less => {
+                    node.left.add(value);
+                    true
+                }
+                Ordering::Equal => return false,
+                Ordering::Greater => {
+                    node.right.add(value);
+                    true
+                }
             },
+        }
+    }
+
+    /// 从这树移除该值而返回是否有成功。
+    ///
+    /// # 引数
+    ///
+    /// * `value` - 要移除的值。
+    ///
+    /// # 返回
+    ///
+    /// 是否有成功，即该是否存在。
+    fn remove(&mut self, value: T) -> bool {
+        match &mut self.0 {
+            None => false,
+            Some(node) => {
+                if node.value == value {
+                } else {
+                }
+                return true;
+            }
         }
     }
 
@@ -148,13 +208,15 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
-    /// Recursively generate a [`String`] to represent the elements in this [`Subtree`].
+    /// Recursively generate a [`String`] to represent the elements in this
+    /// [`Subtree`].
     ///
     /// # Arguments
     ///
-    /// * `depth` -       The depth of the current [`Subtree`] in the [`BinarySearchTree`].
+    /// * `depth` -       The depth of the current [`Subtree`] in the
+    ///   [`BinarySearchTree`].
     /// * `make_branch` - Controls whether "├─ " or "└─ " will be printed before
-    ///                   the element.
+    ///   the element.
     ///
     /// # Return
     ///
@@ -198,8 +260,8 @@ impl<T: Ord + ToString> ToString for Subtree<T> {
     }
 }
 
-/// A binary search tree that does not accept duplicate values.
-/// Makes no attempt to balance the tree.
+/// A binary search tree that does not accept duplicate values. Makes no attempt
+/// to balance the tree.
 pub struct BinarySearchTree<T: Ord + ToString> {
     root: Subtree<T>,
 }
@@ -224,8 +286,21 @@ impl<T: Ord + ToString> BinarySearchTree<T> {
     /// # Arguments
     ///
     /// * `value` - The value that the new [`Node`] should contain.
-    pub fn add(&mut self, value: T) {
-        self.root.add(value);
+    pub fn add(&mut self, value: T) -> bool {
+        self.root.add(value)
+    }
+
+    /// 从这树移除该值而返回是否有成功。
+    ///
+    /// # 引数
+    ///
+    /// * `value` - 要移除的值。
+    ///
+    /// # 返回
+    ///
+    /// 是否有成功，即该是否存在。
+    pub fn remove(&mut self, value: T) -> bool {
+        self.root.remove(value)
     }
 
     /// Return whether a given value is contained within this [`Subtree`].

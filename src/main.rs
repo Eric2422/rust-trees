@@ -75,12 +75,16 @@ fn main() {
         }
 
         match tree {
-            BinarySearchTreeType::Integer(ref mut integer_tree) => integer_tree.add(
-                input
-                    .parse::<i32>()
-                    .expect(format!("\"{input}\"不是整数。\n").as_str()),
-            ),
-            BinarySearchTreeType::String(ref mut string_tree) => string_tree.add(input),
+            BinarySearchTreeType::Integer(ref mut integer_tree) => {
+                integer_tree.add(
+                    input
+                        .parse::<i32>()
+                        .expect(format!("\"{input}\"不是整数。\n").as_str()),
+                );
+            }
+            BinarySearchTreeType::String(ref mut string_tree) => {
+                string_tree.add(input);
+            }
         }
     }
 }
