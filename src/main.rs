@@ -12,6 +12,7 @@ fn main() {
         panic!("用法：{} <string、int/integer> <随机值数>", args[0]);
     }
 
+    // 如果有
     let num_random = if args.len() >= 3 {
         args[2]
             .parse::<i32>()

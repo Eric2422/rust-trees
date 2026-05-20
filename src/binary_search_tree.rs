@@ -164,7 +164,7 @@ impl<T: Ord + ToString> Subtree<T> {
             None => String::from(""),
             Some(node) => {
                 let mut output_string: String = String::from("");
-                
+
                 for _i in 1..depth {
                     output_string += "   ";
                 }
@@ -178,13 +178,8 @@ impl<T: Ord + ToString> Subtree<T> {
                 output_string += format!(
                     "{}\n{}{}",
                     node.to_string(),
-                    &node
-                        .left
-                        .to_string(depth + 1, child_branches),
-                    &node.right.to_string(
-                        depth + 1,
-                        false
-                    )
+                    &node.left.to_string(depth + 1, child_branches),
+                    &node.right.to_string(depth + 1, false)
                 )
                 .as_str();
 
