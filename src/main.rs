@@ -4,12 +4,13 @@ use std::io::Write;
 
 use binary_search_tree::BinarySearchTree;
 use binary_search_tree::BinarySearchTreeType;
+use rand::RngExt;
 
 fn main() {
     // 查看有没有足够引数。
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 2 {
-        panic!("用法：{} <string、int/integer> <随机值数>", args[0]);
+        panic!("用法：{} <str/string、int/integer> <随机值数>", args[0]);
     }
 
     // 第二引数是数的类型。
@@ -19,7 +20,7 @@ fn main() {
             tree = BinarySearchTreeType::Integer(BinarySearchTree::new());
         }
 
-        "string" => {
+        "str" | "string" => {
             tree = BinarySearchTreeType::String(BinarySearchTree::new());
         }
 
@@ -46,8 +47,10 @@ fn main() {
         }
 
         BinarySearchTreeType::String(ref mut string_tree) => {
+            let mut rng = rand::rng();
+
             for _i in 0..num_random {
-                string_tree.add(rand::random::<char>().to_string());
+                string_tree.add((rng.sample(rand::distr::Alphanumeric) as char).to_string());
             }
         }
     }
@@ -57,7 +60,7 @@ fn main() {
         println!("树大小：{}", tree.size());
         println!("树：\n{}", tree.to_string());
 
-        print!("输入想插入的元素：");
+        print!("输入想插入的元素（如果想退出，即输入回车）：");
         let _ = std::io::stdout().flush();
 
         let mut input = String::new();
@@ -66,6 +69,10 @@ fn main() {
             .expect("输入值无效。");
         input = input.trim_end().to_string();
         println!();
+
+        if input == "" {
+            break;
+        }
 
         match tree {
             BinarySearchTreeType::Integer(ref mut integer_tree) => integer_tree.add(
