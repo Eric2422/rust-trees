@@ -115,15 +115,9 @@ impl<T: Ord + ToString> Subtree<T> {
                 true
             }
             Some(node) => match value.cmp(&node.value) {
-                Ordering::Less => {
-                    node.left.add(value);
-                    true
-                }
-                Ordering::Equal => return false,
-                Ordering::Greater => {
-                    node.right.add(value);
-                    true
-                }
+                Ordering::Less => node.left.add(value),
+                Ordering::Equal => false,
+                Ordering::Greater => node.right.add(value),
             },
         }
     }
@@ -286,6 +280,10 @@ impl<T: Ord + ToString> BinarySearchTree<T> {
     /// # Arguments
     ///
     /// * `value` - The value that the new [`Node`] should contain.
+    ///
+    /// # Return
+    ///
+    /// Whether the value was successfully added.
     pub fn add(&mut self, value: T) -> bool {
         self.root.add(value)
     }

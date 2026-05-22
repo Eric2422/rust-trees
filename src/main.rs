@@ -6,6 +6,27 @@ use binary_search_tree::BinarySearchTree;
 use binary_search_tree::BinarySearchTreeType;
 use rand::RngExt;
 
+/// Generate a [`String`] of random characters with a random length of 1 to `max_length` (exclusive).
+///
+/// # Arguments
+///
+/// * `max_length` - The maximum length of the [`String`] (exclusive).
+///
+/// # Return
+///
+/// A [`String`] of random characters with a random length of 1 to `max_length` (exclusive).
+fn random_string(max_length: u32) -> String {
+    let string_length = rand::rng().random_range(1..max_length);
+
+    let mut random_string = String::new();
+
+    for _j in 0..string_length {
+        random_string.push(rand::rng().sample(rand::distr::Alphanumeric) as char);
+    }
+
+    random_string
+}
+
 fn main() {
     // 查看有没有足够引数。
     let args: Vec<String> = std::env::args().collect();
@@ -42,15 +63,22 @@ fn main() {
     match tree {
         BinarySearchTreeType::Integer(ref mut integer_tree) => {
             for _i in 0..num_random {
-                integer_tree.add(rand::random::<i32>());
+                loop {
+                    if integer_tree.add(rand::random::<i32>()) {
+                        break;
+                    }
+                }
             }
         }
 
         BinarySearchTreeType::String(ref mut string_tree) => {
-            let mut rng = rand::rng();
-
+            // Generate random strings of 1 to 5 characters.
             for _i in 0..num_random {
-                string_tree.add((rng.sample(rand::distr::Alphanumeric) as char).to_string());
+                loop {
+                    if string_tree.add(random_string(6)) {
+                        break;
+                    }
+                }
             }
         }
     }
