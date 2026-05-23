@@ -131,14 +131,32 @@ impl<T: Ord + ToString> Subtree<T> {
     /// # 返回
     ///
     /// 是否有成功，即该是否存在。
-    fn remove(&mut self, value: T) -> bool {
+    fn remove(&mut self, value: T) -> &mut Subtree<T> {
         match &mut self.0 {
-            None => false,
+            None => self,
             Some(node) => {
+                // 找到想移除的值了。
                 if node.value == value {
-                } else {
+                    match &node.left.0 {
+                        None => {
+                            return &mut node.right;
+                        }
+                        Some(_node) => {}
+                    }
+
+                    match &node.right.0 {
+                        None => {
+                            return &mut node.left;
+                        }
+                        Some(_node) => {}
+                    }
+                } else if node.value < value {
+                    node.left = *(node.left.remove(value));
+                } else if node.value > value {
+                    node.right = *(node.right.remove(value));
                 }
-                return true;
+
+                return self;
             }
         }
     }
@@ -297,7 +315,7 @@ impl<T: Ord + ToString> BinarySearchTree<T> {
     /// # 返回
     ///
     /// 是否有成功，即该是否存在。
-    pub fn remove(&mut self, value: T) -> bool {
+    pub fn remove(&mut self, value: T) -> &mut Subtree<T> {
         self.root.remove(value)
     }
 
