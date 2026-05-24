@@ -122,45 +122,6 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
-    /// 从这树移除该值而返回是否有成功。
-    ///
-    /// # 引数
-    ///
-    /// * `value` - 要移除的值。
-    ///
-    /// # 返回
-    ///
-    /// 是否有成功，即该是否存在。
-    fn remove(&mut self, value: T) -> &mut Subtree<T> {
-        match &mut self.0 {
-            None => self,
-            Some(node) => {
-                // 找到想移除的值了。
-                if node.value == value {
-                    match &node.left.0 {
-                        None => {
-                            return &mut node.right;
-                        }
-                        Some(_node) => {}
-                    }
-
-                    match &node.right.0 {
-                        None => {
-                            return &mut node.left;
-                        }
-                        Some(_node) => {}
-                    }
-                } else if node.value < value {
-                    node.left = *(node.left.remove(value));
-                } else if node.value > value {
-                    node.right = *(node.right.remove(value));
-                }
-
-                return self;
-            }
-        }
-    }
-
     /// Return whether this [`Subtree`] has a left child.
     ///
     /// # Return
@@ -304,19 +265,6 @@ impl<T: Ord + ToString> BinarySearchTree<T> {
     /// Whether the value was successfully added.
     pub fn add(&mut self, value: T) -> bool {
         self.root.add(value)
-    }
-
-    /// 从这树移除该值而返回是否有成功。
-    ///
-    /// # 引数
-    ///
-    /// * `value` - 要移除的值。
-    ///
-    /// # 返回
-    ///
-    /// 是否有成功，即该是否存在。
-    pub fn remove(&mut self, value: T) -> &mut Subtree<T> {
-        self.root.remove(value)
     }
 
     /// Return whether a given value is contained within this [`Subtree`].
