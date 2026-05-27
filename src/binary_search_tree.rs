@@ -82,11 +82,11 @@ impl<T: Ord + ToString> Subtree<T> {
         Self(None)
     }
 
-    /// 获取最小值。
+    /// Get the smallest value in the subtree.
     ///
-    /// # 返回
+    /// # Return
     ///
-    /// 最小值。
+    /// The smallest value in the subtree.
     fn get_min(self) -> T {
         match self.0 {
             None => self.0.unwrap().value,
@@ -94,11 +94,11 @@ impl<T: Ord + ToString> Subtree<T> {
         }
     }
 
-    /// 获取最大值。
+    /// Get the largest value in the subtree.
     ///
-    /// # 返回
+    /// # Return
     ///
-    /// 最大值。
+    /// The largest value in the subtree.
     fn get_max(self) -> T {
         match self.0 {
             None => self.0.unwrap().value,
