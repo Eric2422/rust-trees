@@ -67,6 +67,15 @@ impl<T: Ord + ToString> Node<T> {
 /// Serves as a wrapper for possibly null [`Node`]s.
 struct Subtree<T: Ord + ToString>(Option<Box<Node<T>>>);
 
+impl<T: Ord + ToString> ToString for Subtree<T> {
+    fn to_string(&self) -> String {
+        match &self.0 {
+            None => String::from("(empty)"),
+            Some(_node) => self.to_string(0, false),
+        }
+    }
+}
+
 impl<T: Ord + ToString> Subtree<T> {
     /// Create an empty subtree (i.e, a null [`Node`]).
     fn new() -> Self {
@@ -220,15 +229,6 @@ impl<T: Ord + ToString> Subtree<T> {
 
                 return output_string;
             }
-        }
-    }
-}
-
-impl<T: Ord + ToString> ToString for Subtree<T> {
-    fn to_string(&self) -> String {
-        match &self.0 {
-            None => String::from("(empty)"),
-            Some(_node) => self.to_string(0, false),
         }
     }
 }
